@@ -1,23 +1,24 @@
-from playwright.sync_api import sync_playwright
-import re
-import time
 from utils.playwright_manager import get_browser
 from agents.selector_agent import choose_best_product
+from memory import get_preferred_brand
+
+import re
+import time
+
 
 class BlinkitBot:
     def __init__(self):
         self.cart = []
-        self.playwright = None
         self.browser = None
         self.page = None
 
-    
-
-
     def start(self):
         self.browser = get_browser()
-        self.page = self.browser.new_page()   # NEW TAB
+
+        self.page = self.browser.new_page()
+
         self.page.goto("https://blinkit.com")
+
         self.page.wait_for_timeout(4000)
 
     def run(self, items, progress):
@@ -25,77 +26,95 @@ class BlinkitBot:
             self.start()
 
         for item in items:
-            progress.update(5, f"Blinkit searching {item['name']}")
 
-            search = self.page.locator("input[placeholder*='Search']").first
-            search.wait_for(state="visible", timeout=10000)
+            item_name = item["name"]
 
-            search.click()
-            search.fill("")
-            search.fill(item["name"])
-            search.press("Enter")
+            preferred_brand = get_preferred_brand(item_name)
 
-            self.page.wait_for_selector(
-                "div.tw-text-300.tw-font-semibold",
-                timeout=15000
-            )
+            if preferred_brand:
+                search_query = f"{preferred_brand} {item_name}"
 
-            products = self.extract_products(self.page)
+                progress.update(
+                    5,
+                    f"Using preferred brand: {search_query}"
+                )
+
+            else:
+                search_query = item_name
+
+                progress.update(
+                    5,
+                    f"Searching: {search_query}"
+                )
+
+            products = self.search_blinkit(search_query)
 
             if not products:
                 continue
 
-            best = choose_best_product(item["name"], products)
+            best = choose_best_product(item_name, products)
 
-            best["card"].scroll_into_view_if_needed()
-            add_btn = best["card"].locator("text=ADD")
+            if not best:
+                continue
 
-            if add_btn.count() > 0:
-                add_btn.first.click()
-                time.sleep(1)
+            self.add_to_cart(best)
 
             self.cart.append({
-            "name": best["name"],
-            "price": best["price"]
+                "name": best["name"],
+                "price": best["price"]
             })
 
         return self.cart
 
-    def extract_products(self, page):
-        name_elements = page.locator(
+    def search_blinkit(self, item):
+        search = self.page.locator(
+            "input[placeholder*='Search']"
+        ).first
+
+        search.wait_for(state="visible", timeout=15000)
+
+        search.click()
+
+        search.fill("")
+
+        search.fill(item)
+
+        search.press("Enter")
+
+        self.page.wait_for_selector(
+            "div.tw-text-300.tw-font-semibold.tw-line-clamp-2",
+            timeout=15000
+        )
+
+        return self.extract_products()
+
+    def extract_products(self):
+        name_elements = self.page.locator(
             "div.tw-text-300.tw-font-semibold.tw-line-clamp-2"
         )
 
         count = name_elements.count()
+
         products = []
 
         for i in range(count):
             try:
                 name_el = name_elements.nth(i)
+
                 name = name_el.inner_text().strip()
 
-                card = name_el.locator("xpath=ancestor::div[@role='button'][1]")
+                card = name_el.locator(
+                    "xpath=ancestor::div[@role='button'][1]"
+                )
+
                 text = card.inner_text().lower()
 
                 price_match = re.search(r"₹\s*(\d+)", text)
-                qty_match = re.search(r"(\d+(?:\.\d+)?)\s*(ml|l|kg|g)", text)
 
-                if not price_match or not qty_match:
+                if not price_match:
                     continue
 
                 price = int(price_match.group(1))
-
-                amount = float(qty_match.group(1))
-                unit = qty_match.group(2)
-
-                if unit == "ml":
-                    quantity = amount / 1000
-                    unit = "l"
-                elif unit == "g":
-                    quantity = amount / 1000
-                    unit = "kg"
-                else:
-                    quantity = amount
 
                 products.append({
                     "name": name,
@@ -108,8 +127,14 @@ class BlinkitBot:
 
         return products
 
-    def close(self):
-        if self.browser:
-            self.browser.close()
-        if self.playwright:
-            self.playwright.stop()
+    def add_to_cart(self, product):
+        card = product["card"]
+
+        card.scroll_into_view_if_needed()
+
+        add_btn = card.locator("text=ADD")
+
+        if add_btn.count() > 0:
+            add_btn.first.click()
+
+            time.sleep(1)

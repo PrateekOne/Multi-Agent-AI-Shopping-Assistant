@@ -1,0 +1,18 @@
+[
+    {
+        "item": "milk",
+        "preferred_brand": "amul"
+    },
+    {
+        "item": "bread",
+        "preferred_brand": "Britannia"
+    },
+    {
+        "item": "chips",
+        "preferred_brand": "bingo"
+    },
+    {
+        "item": "eggs",
+        "preferred_brand": "Farm Fresh"
+    }
+]
