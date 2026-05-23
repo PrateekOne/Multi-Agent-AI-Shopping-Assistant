@@ -1,0 +1,147 @@
+2026-05-23 17:43:55 | INFO     | memory | Brand preferences DISABLED.
+2026-05-23 17:43:57 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:43:57 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-05-23 17:43:59 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:43:59 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-05-23 17:44:02 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:44:02 | INFO     | utils.playwright_manager | Starting browser | session=C:\Users\ganni\.shopping_agent\browser_session
+2026-05-23 17:44:02 | DEBUG    | asyncio | Using proactor: IocpProactor
+2026-05-23 17:44:11 | INFO     | utils.playwright_manager | Browser started.
+2026-05-23 17:44:17 | INFO     | automation.blinkit_bot | Blinkit: clearing cart from previous run
+2026-05-23 17:44:19 | INFO     | agents.selector_agent | Selecting product for '2 litres of milk' | 24 candidates | preferred='none'
+2026-05-23 17:44:19 | INFO     | agents.product_ranker | Ranking 10 products for query='2 litres of milk'
+2026-05-23 17:44:19 | DEBUG    | agents.product_ranker | [0.141] XLR8 More Than Milk Ultra Filtered Skimmed Milk    rel=0.22 val=0.00 brand=0.35
+2026-05-23 17:44:19 | DEBUG    | agents.product_ranker | [0.538] Heritage Daily Health Toned Milk                   rel=0.29 val=0.99 brand=0.85
+2026-05-23 17:44:19 | DEBUG    | agents.product_ranker | [0.561] Amul Taaza Toned Milk                              rel=0.33 val=1.00 brand=0.85
+2026-05-23 17:44:19 | DEBUG    | agents.product_ranker | [0.529] Amul Taaza Homogenised Toned Milk                  rel=0.29 val=0.96 brand=0.85
+2026-05-23 17:44:19 | DEBUG    | agents.product_ranker | [0.479] Nandini Goodlife Toned Milk                        rel=0.33 val=0.98 brand=0.35
+2026-05-23 17:44:19 | DEBUG    | agents.product_ranker | [0.570] Amul Gold Milk                                     rel=0.40 val=0.94 brand=0.85
+2026-05-23 17:44:19 | DEBUG    | agents.product_ranker | [0.498] Amul Slim 'n' Trim Skimmed Milk (Zero Cholesterol) rel=0.22 val=0.94 brand=0.85
+2026-05-23 17:44:19 | DEBUG    | agents.product_ranker | [0.431] Akshayakalpa Organic Cow Milk                      rel=0.33 val=0.82 brand=0.35
+2026-05-23 17:44:19 | DEBUG    | agents.product_ranker | [0.424] Akshayakalpa Organic Slim Milk                     rel=0.33 val=0.79 brand=0.35
+2026-05-23 17:44:19 | DEBUG    | agents.product_ranker | [0.536] Nestle a+ Slim Skimmed Milk                        rel=0.33 val=0.92 brand=0.85
+2026-05-23 17:44:19 | DEBUG    | agents.product_ranker | Dedup: dropped 'Amul Taaza Homogenised Toned Milk'
+2026-05-23 17:44:19 | INFO     | agents.product_ranker | Top pick: 'Amul Gold Milk' | score=0.570 | gap=0.009
+2026-05-23 17:44:19 | INFO     | agents.selector_agent | Scores too close (gap=0.009); asking LLM to disambiguate
+2026-05-23 17:44:21 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:44:21 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-05-23 17:44:23 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:44:23 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-05-23 17:44:26 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:44:26 | WARNING  | agents.selector_agent | LLM returned empty response for '2 litres of milk'
+2026-05-23 17:44:26 | INFO     | agents.selector_agent | LLM fallback failed; using top-ranked: 'Amul Gold Milk'
+2026-05-23 17:44:26 | INFO     | automation.blinkit_bot | Blinkit: selected 'Amul Gold Milk' @ Rs83 (qty 1)
+2026-05-23 17:44:29 | INFO     | agents.selector_agent | Selecting product for 'eggs' | 24 candidates | preferred='none'
+2026-05-23 17:44:29 | INFO     | agents.product_ranker | Ranking 10 products for query='eggs'
+2026-05-23 17:44:29 | DEBUG    | agents.product_ranker | [0.459] Abhi Vitamin D3 White Protein Rich Eggs            rel=0.55 val=0.62 brand=0.35
+2026-05-23 17:44:29 | DEBUG    | agents.product_ranker | [0.631] dr Good Premium Fresh White Eggs                   rel=0.70 val=1.00 brand=0.35
+2026-05-23 17:44:29 | DEBUG    | agents.product_ranker | [0.662] Freshen Eggs Farm Fresh White Eggs (30 pieces)     rel=0.59 val=1.00 brand=0.85
+2026-05-23 17:44:29 | DEBUG    | agents.product_ranker | [0.287] Abhi Nutri+ White Protein Rich Eggs                rel=0.59 val=0.00 brand=0.35
+2026-05-23 17:44:29 | DEBUG    | agents.product_ranker | [0.671] Anjali Eggs White Eggs                             rel=0.80 val=1.00 brand=0.35
+2026-05-23 17:44:29 | DEBUG    | agents.product_ranker | [0.645] Freshen Eggs Farm Fresh White Eggs (6 pieces)      rel=0.63 val=0.88 brand=0.85
+2026-05-23 17:44:29 | DEBUG    | agents.product_ranker | [0.362] Hen Fruit -30 Farm Fresh No Antibiotics White Prot rel=0.48 val=0.14 brand=0.85
+2026-05-23 17:44:29 | DEBUG    | agents.product_ranker | [0.656] Anjali Eggs Brown Eggs                             rel=0.80 val=0.95 brand=0.35
+2026-05-23 17:44:29 | DEBUG    | agents.product_ranker | [0.415] Sneha Select Table White Eggs                      rel=0.63 val=0.36 brand=0.35
+2026-05-23 17:44:29 | DEBUG    | agents.product_ranker | [0.261] Eggoz Nutrition White Protein Rich Eggs (30 pieces rel=0.52 val=0.00 brand=0.35
+2026-05-23 17:44:29 | DEBUG    | agents.product_ranker | Dedup: dropped 'Freshen Eggs Farm Fresh White Eggs (6 pieces)'
+2026-05-23 17:44:29 | INFO     | agents.product_ranker | Top pick: 'Anjali Eggs White Eggs' | score=0.671 | gap=0.010
+2026-05-23 17:44:29 | INFO     | agents.selector_agent | Scores too close (gap=0.010); asking LLM to disambiguate
+2026-05-23 17:44:31 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:44:31 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-05-23 17:44:34 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:44:34 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-05-23 17:44:36 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:44:36 | WARNING  | agents.selector_agent | LLM returned empty response for 'eggs'
+2026-05-23 17:44:36 | INFO     | agents.selector_agent | LLM fallback failed; using top-ranked: 'Anjali Eggs White Eggs'
+2026-05-23 17:44:36 | INFO     | automation.blinkit_bot | Blinkit: selected 'Anjali Eggs White Eggs' @ Rs50 (qty 1)
+2026-05-23 17:44:39 | INFO     | agents.selector_agent | Selecting product for 'lays chips' | 24 candidates | preferred='none'
+2026-05-23 17:44:39 | INFO     | agents.product_ranker | Ranking 10 products for query='lays chips'
+2026-05-23 17:44:39 | DEBUG    | agents.product_ranker | [0.375] Haldiram's Nagpur Halke Fulke Salted Potato Chips  rel=0.22 val=0.63 brand=0.65
+2026-05-23 17:44:39 | DEBUG    | agents.product_ranker | [0.537] Lay's India's Magic Masala Potato Chips            rel=0.60 val=0.81 brand=0.35
+2026-05-23 17:44:39 | DEBUG    | agents.product_ranker | [0.125] Too Yumm Bhoot Wafer Potato Chips - Spicy Jholokia rel=0.18 val=0.00 brand=0.35
+2026-05-23 17:44:39 | DEBUG    | agents.product_ranker | [0.515] Lay's American Style Cream & Onion Potato Chips    rel=0.54 val=0.81 brand=0.35
+2026-05-23 17:44:39 | DEBUG    | agents.product_ranker | [0.345] Let's Try Desi Masala Chips                        rel=0.29 val=0.59 brand=0.35
+2026-05-23 17:44:39 | DEBUG    | agents.product_ranker | [0.482] Lay's West Indies Hot n Sweet Chilli Flavour Potat rel=0.46 val=0.81 brand=0.35
+2026-05-23 17:44:39 | DEBUG    | agents.product_ranker | [0.275] Bingo Popped Salt n Pepper Potato Chips            rel=0.25 val=0.26 brand=0.65
+2026-05-23 17:44:39 | DEBUG    | agents.product_ranker | [0.659] Lay's Classic Salted Potato Chips                  rel=0.77 val=1.00 brand=0.35
+2026-05-23 17:44:39 | DEBUG    | agents.product_ranker | [0.155] Crax Zero Masala Potato Chips - No Palm Oil        rel=0.20 val=0.07 brand=0.35
+2026-05-23 17:44:39 | DEBUG    | agents.product_ranker | [0.537] Lay's Chile Limon Flavour Potato Chips             rel=0.60 val=0.81 brand=0.35
+2026-05-23 17:44:39 | INFO     | agents.product_ranker | Top pick: 'Lay's Classic Salted Potato Chips' | score=0.659 | gap=0.122
+2026-05-23 17:44:39 | INFO     | agents.selector_agent | Confident pick (gap=0.122): 'Lay's Classic Salted Potato Chips'
+2026-05-23 17:44:39 | INFO     | automation.blinkit_bot | Blinkit: selected 'Lay's Classic Salted Potato Chips' @ Rs20 (qty 1)
+2026-05-23 17:44:46 | INFO     | automation.zepto_bot | Zepto: clearing cart from previous run
+2026-05-23 17:44:59 | INFO     | agents.selector_agent | Selecting product for '2 litres of milk' | 30 candidates | preferred='none'
+2026-05-23 17:44:59 | INFO     | agents.product_ranker | Ranking 10 products for query='2 litres of milk'
+2026-05-23 17:44:59 | DEBUG    | agents.product_ranker | Blocked: 'Country Delight Natural Fresh Cow Milk | 25g Protein | Pouch'
+2026-05-23 17:44:59 | DEBUG    | agents.product_ranker | [0.364] Country Delight Cow Fresh Milk | Pouch             rel=0.29 val=0.41 brand=0.85
+2026-05-23 17:44:59 | DEBUG    | agents.product_ranker | [0.347] Nandini Goodlife Toned UHT Milk (Fino Pouch)       rel=0.22 val=0.69 brand=0.35
+2026-05-23 17:44:59 | DEBUG    | agents.product_ranker | [0.430] Nandini Toned Fresh Milk | Pouch                   rel=0.33 val=0.81 brand=0.35
+2026-05-23 17:44:59 | DEBUG    | agents.product_ranker | [0.320] Country Delight Buffalo Fresh Milk | Pouch         rel=0.29 val=0.26 brand=0.85
+2026-05-23 17:44:59 | DEBUG    | agents.product_ranker | [0.414] Nandini Standardized Fresh Milk | Pouch            rel=0.33 val=0.76 brand=0.35
+2026-05-23 17:44:59 | DEBUG    | agents.product_ranker | [0.356] Milky Mist Lactose Free Milk                       rel=0.29 val=0.63 brand=0.35
+2026-05-23 17:44:59 | DEBUG    | agents.product_ranker | [0.432] Nandini Good Life Toned UHT Milk (Fino Pouch)      rel=0.20 val=1.00 brand=0.35
+2026-05-23 17:44:59 | DEBUG    | agents.product_ranker | [0.500] Amul Taaza Homogenised Toned Milk (Tetra Pack)     rel=0.22 val=0.94 brand=0.85
+2026-05-23 17:44:59 | DEBUG    | agents.product_ranker | [0.133] Nandini Goodlife Toned Milk UHT (Tetra Pack Brick) rel=0.20 val=0.00 brand=0.35
+2026-05-23 17:44:59 | INFO     | agents.product_ranker | Top pick: 'Amul Taaza Homogenised Toned Milk (Tetra Pack)' | score=0.500 | gap=0.067
+2026-05-23 17:44:59 | INFO     | agents.selector_agent | Scores too close (gap=0.067); asking LLM to disambiguate
+2026-05-23 17:45:02 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:45:02 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-05-23 17:45:04 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:45:04 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-05-23 17:45:07 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:45:07 | WARNING  | agents.selector_agent | LLM returned empty response for '2 litres of milk'
+2026-05-23 17:45:07 | INFO     | agents.selector_agent | LLM fallback failed; using top-ranked: 'Amul Taaza Homogenised Toned Milk (Tetra Pack)'
+2026-05-23 17:45:07 | INFO     | automation.zepto_bot | Zepto: selected 'Amul Taaza Homogenised Toned Milk (Tetra Pack)' @ Rs17 (qty 1)
+2026-05-23 17:45:09 | INFO     | agents.selector_agent | Selecting product for 'eggs' | 30 candidates | preferred='none'
+2026-05-23 17:45:09 | INFO     | agents.product_ranker | Ranking 10 products for query='eggs'
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | [0.557] Fresh White Eggs                                   rel=0.97 val=0.39 brand=0.35
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | [0.524] Eggs by Henfruit - Max Protein Specialty Eggs      rel=0.63 val=0.73 brand=0.35
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | [0.684] Fresh White Eggs                                   rel=0.97 val=0.82 brand=0.35
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | [0.306] Eggs by Henfruit - Max Protein Specialty Eggs      rel=0.63 val=0.00 brand=0.35
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | [0.739] Fresh White Eggs                                   rel=0.97 val=1.00 brand=0.35
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | [0.567] Abhi Eggs Gold + Brown Eggs with Immunity Boosters rel=0.59 val=0.93 brand=0.35
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | [0.358] Eggs by Henfruit - 30 Farm Fresh No Antibiotics Eg rel=0.55 val=0.03 brand=0.85
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | [0.613] Vijay White Eggs                                   rel=0.80 val=0.80 brand=0.35
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | [0.398] Eggoz Protein Rich Farm Fresh White Eggs           rel=0.59 val=0.12 brand=0.85
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | [0.670] Vijay White Eggs                                   rel=0.80 val=0.99 brand=0.35
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | Dedup: dropped 'Fresh White Eggs'
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | Dedup: dropped 'Vijay White Eggs'
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | Dedup: dropped 'Fresh White Eggs'
+2026-05-23 17:45:09 | DEBUG    | agents.product_ranker | Dedup: dropped 'Eggs by Henfruit - Max Protein Specialty Eggs'
+2026-05-23 17:45:09 | INFO     | agents.product_ranker | Top pick: 'Fresh White Eggs' | score=0.739 | gap=0.069
+2026-05-23 17:45:09 | INFO     | agents.selector_agent | Scores too close (gap=0.069); asking LLM to disambiguate
+2026-05-23 17:45:11 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:45:11 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-05-23 17:45:13 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:45:13 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-05-23 17:45:16 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:45:16 | WARNING  | agents.selector_agent | LLM returned empty response for 'eggs'
+2026-05-23 17:45:16 | INFO     | agents.selector_agent | LLM fallback failed; using top-ranked: 'Fresh White Eggs'
+2026-05-23 17:45:16 | INFO     | automation.zepto_bot | Zepto: selected 'Fresh White Eggs' @ Rs48 (qty 1)
+2026-05-23 17:45:18 | INFO     | agents.selector_agent | Selecting product for 'lays chips' | 30 candidates | preferred='none'
+2026-05-23 17:45:18 | INFO     | agents.product_ranker | Ranking 10 products for query='lays chips'
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | [0.485] Lay's Chile Lemon Flavour | Crunchy Potato Chips   rel=0.54 val=0.71 brand=0.35
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | [0.527] Lay's India's Magic Masala | Crunchy Potato Chips  rel=0.54 val=0.86 brand=0.35
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | [0.527] Lay's American Cream & Onion Flavour | Potato Chip rel=0.54 val=0.86 brand=0.35
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | [0.527] Lay's American Cream & Onion Flavour | Potato Chip rel=0.54 val=0.86 brand=0.35
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | [0.527] Lay's India's Magic Masala | Crunchy Potato Chips  rel=0.54 val=0.86 brand=0.35
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | [0.621] Lay's Classic Salted | Crunchy Potato Chips        rel=0.67 val=1.00 brand=0.35
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | [0.467] Lay's West Indies Hot 'n' Sweet Chilli | Potato Ch rel=0.50 val=0.71 brand=0.35
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | [0.467] Lay's West Indies Hot 'n' Sweet Chilli | Potato Ch rel=0.50 val=0.71 brand=0.35
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | [0.270] Lay's India's Magic Masala | Crunchy Potato Chips  rel=0.54 val=0.00 brand=0.35
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | [0.270] Lay's India's Magic Masala | Crunchy Potato Chips  rel=0.54 val=0.00 brand=0.35
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | Dedup: dropped 'Lay's American Cream & Onion Flavour | Potato Chips'
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | Dedup: dropped 'Lay's India's Magic Masala | Crunchy Potato Chips'
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | Dedup: dropped 'Lay's West Indies Hot 'n' Sweet Chilli | Potato Chips'
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | Dedup: dropped 'Lay's India's Magic Masala | Crunchy Potato Chips'
+2026-05-23 17:45:18 | DEBUG    | agents.product_ranker | Dedup: dropped 'Lay's India's Magic Masala | Crunchy Potato Chips'
+2026-05-23 17:45:18 | INFO     | agents.product_ranker | Top pick: 'Lay's Classic Salted | Crunchy Potato Chips' | score=0.621 | gap=0.094
+2026-05-23 17:45:18 | INFO     | agents.selector_agent | Scores too close (gap=0.094); asking LLM to disambiguate
+2026-05-23 17:45:20 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:45:20 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-05-23 17:45:23 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:45:23 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-05-23 17:45:26 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-05-23 17:45:26 | WARNING  | agents.selector_agent | LLM returned empty response for 'lays chips'
+2026-05-23 17:45:26 | INFO     | agents.selector_agent | LLM fallback failed; using top-ranked: 'Lay's Classic Salted | Crunchy Potato Chips'
+2026-05-23 17:45:26 | INFO     | automation.zepto_bot | Zepto: selected 'Lay's Classic Salted | Crunchy Potato Chips' @ Rs20 (qty 1)

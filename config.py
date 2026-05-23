@@ -1,16 +1,3 @@
-"""
-config.py
-
-Central configuration for the AI Shopping Agent.
-
-Scoring weights, blocklists, quality brand tiers, LLM parameters,
-and browser settings are all defined here so they can be tuned in
-one place without touching business logic.
-
-To override browser session path at runtime:
-    export BROWSER_SESSION_PATH=/your/path
-"""
-
 from __future__ import annotations
 
 import os
@@ -18,36 +5,19 @@ from dataclasses import dataclass, field
 from typing import Dict, List
 
 
-# ──────────────────────────────────────────────────────────────
-#  Scoring Weights
-# ──────────────────────────────────────────────────────────────
-
 @dataclass
 class ScoringWeights:
-    """
-    Configurable weights for the product ranking engine.
-    All weights are applied as a linear combination; they do NOT need
-    to sum to 1.0 (each dimension is independently normalized to [0,1]
-    before multiplication), but keeping them close to 1.0 total makes
-    the 'total' score intuitively readable.
-
-    Tuning guide:
-      - Raise `relevance` if the agent picks wrong product categories.
-      - Raise `value` if the agent consistently picks overpriced options.
-      - Raise `brand` if brand fidelity matters more than cost.
-    """
-    relevance: float = 0.40   # Semantic match between user query and product
-    value: float = 0.30       # Price-per-unit efficiency (normalized)
-    brand: float = 0.15       # Known brand quality tier + preference match
-    availability: float = 0.15  # Reserved for future stock/rating signals
+    # Raise relevance if the agent keeps picking the wrong product category.
+    # Raise value if it keeps picking overpriced options.
+    # Raise brand if brand fidelity matters more than cost for your use case.
+    relevance: float = 0.40
+    value: float = 0.30
+    brand: float = 0.15
+    availability: float = 0.15   # reserved for future rating/stock signals
 
 
-# ──────────────────────────────────────────────────────────────
-#  Variant Blocklists
-# ──────────────────────────────────────────────────────────────
-
-# Maps a category keyword (if found in query) → product name substrings to block.
-# Add new categories freely. Matching is case-insensitive substring.
+# Maps a category keyword in the query to product name substrings that should
+# be blocked — prevents "milk" search from returning yogurt or protein shakes
 VARIANT_BLOCKLIST: Dict[str, List[str]] = {
     "milk": [
         "curd", "greek", "yogurt", "yoghurt", "butter", "ghee",
@@ -63,12 +33,7 @@ VARIANT_BLOCKLIST: Dict[str, List[str]] = {
     "oil": ["essential oil", "hair oil", "baby oil"],
 }
 
-
-# ──────────────────────────────────────────────────────────────
-#  Quality Brand Tiers
-# ──────────────────────────────────────────────────────────────
-
-# Tier 1: Flagship Indian & international FMCG brands — consistent quality.
+# Tier 1: flagship FMCG brands with consistent nationwide quality
 QUALITY_BRANDS_TIER1: List[str] = [
     "amul", "britannia", "nestlé", "nestle", "mother dairy",
     "aashirvaad", "fortune", "saffola", "dabur", "tata",
@@ -76,68 +41,56 @@ QUALITY_BRANDS_TIER1: List[str] = [
     "mahananda", "heritage", "vijaya",
 ]
 
-# Tier 2: Well-known but slightly more regional or snack-focused brands.
+# Tier 2: well-known regional or snack-focused brands
 QUALITY_BRANDS_TIER2: List[str] = [
     "patanjali", "haldiram", "mtr", "maggi", "parle", "lays",
     "bingo", "pepsico", "kitkat", "cadbury", "coca cola",
     "pepsi", "mondelez", "himalaya", "organic india",
     "maaza", "real", "tropicana", "paperboat",
-    "weikfield", "ching's", "priya", "catch",
+    "weikfield", "chings", "priya", "catch",
+    "kurkure", "uncle chipps", "sunfeast", "oreo", "bourbon",
+    "good day", "marie", "hide and seek", "monaco",
 ]
 
-
-# ──────────────────────────────────────────────────────────────
-#  LLM Configuration
-# ──────────────────────────────────────────────────────────────
 
 @dataclass
 class LLMConfig:
     url: str = "http://localhost:8080"
-
-    # Timeouts and retries
     timeout: int = 25
     retries: int = 2
-
-    # Token budgets — keep selection tasks cheap
-    max_tokens_select: int = 120   # For product disambiguation (JSON index only)
-    max_tokens_parse: int = 500    # For item extraction from user input
-
-    # Temperature — deterministic for selection, slight variance for parsing
-    temperature_select: float = 0.0
+    max_tokens_select: int = 120   # keep low — selection only needs a JSON index
+    max_tokens_parse: int = 500
+    temperature_select: float = 0.0   # deterministic for product selection
     temperature_parse: float = 0.3
 
-
-# ──────────────────────────────────────────────────────────────
-#  App-wide Configuration
-# ──────────────────────────────────────────────────────────────
 
 @dataclass
 class AppConfig:
     llm: LLMConfig = field(default_factory=LLMConfig)
     scoring: ScoringWeights = field(default_factory=ScoringWeights)
 
-    # Browser session: override via env var for portability across machines
+    # Browser session path — override with BROWSER_SESSION_PATH env var
+    # so the project works on any machine without editing this file
     browser_session_path: str = field(
         default_factory=lambda: os.environ.get(
             "BROWSER_SESSION_PATH",
-            os.path.join(
-                os.path.expanduser("~"),
-                ".shopping_agent",
-                "browser_session",
-            ),
+            os.path.join(os.path.expanduser("~"), ".shopping_agent", "browser_session"),
         )
     )
 
-    # Ranking pipeline controls
-    max_candidates: int = 10          # Max raw products passed to ranker
-    top_k_for_llm: int = 5            # Top K candidates sent to LLM fallback
+    max_candidates: int = 10         # how many raw scraper results enter the ranker
+    top_k_for_llm: int = 5           # how many top candidates get sent to the LLM
 
-    # If top-2 score gap ≥ this, skip LLM call and return immediately
+    # If the gap between the top two scores exceeds this, skip the LLM call
     confidence_gap_threshold: float = 0.12
 
-    # Jaccard similarity above which two products are considered duplicates
+    # Products with Jaccard token similarity above this are treated as duplicates
     dedup_similarity_threshold: float = 0.80
 
+    # Products scoring below this relevance value are excluded from ranking.
+    # This stops a Britannia biscuit from winning a "lays chips" search because
+    # it happened to score well on brand/value while matching zero query words.
+    min_relevance_threshold: float = 0.05
 
-# Singleton instance — import this everywhere
+
 CONFIG = AppConfig()
