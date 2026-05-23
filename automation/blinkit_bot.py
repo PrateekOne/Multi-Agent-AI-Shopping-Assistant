@@ -1,13 +1,3 @@
-"""
-automation/blinkit_bot.py
-
-Playwright bot for Blinkit.
-Core automation logic is unchanged from original.
-Changes: structured logging, explicit exception logging (no silent swallowing).
-"""
-
-from __future__ import annotations
-
 import logging
 import re
 import time
@@ -22,12 +12,11 @@ logger = logging.getLogger(__name__)
 class BlinkitBot:
     def __init__(self):
         self.cart = []
-        self.browser = None
         self.page = None
 
     def start(self):
-        self.browser = get_browser()
-        self.page = self.browser.new_page()
+        browser = get_browser()
+        self.page = browser.new_page()
         self.page.goto("https://blinkit.com")
         self.page.wait_for_timeout(4000)
 
@@ -35,38 +24,67 @@ class BlinkitBot:
         if not self.page:
             self.start()
 
+        # Clear whatever is left in the cart from the previous run
+        self.clear_cart()
+
         for item in items:
             item_name = item["name"]
+            quantity = int(item.get("amount", 1))
             preferred_brand = get_preferred_brand(item_name)
 
+            # Build search query — if brand string already contains the item
+            # words we use the brand alone, otherwise prepend it
             if preferred_brand:
-                search_query = f"{preferred_brand} {item_name}"
+                item_words = set(item_name.lower().split())
+                brand_words = set(preferred_brand.lower().split())
+                if item_words <= brand_words:
+                    search_query = preferred_brand
+                else:
+                    search_query = f"{preferred_brand} {item_name}"
                 progress.update(5, f"Blinkit: searching '{search_query}' (preferred brand)")
             else:
                 search_query = item_name
                 progress.update(5, f"Blinkit: searching '{search_query}'")
 
             products = self.search_blinkit(search_query)
-
             if not products:
-                logger.warning("Blinkit: no products found for '%s'", search_query)
+                logger.warning("Blinkit: no results for '%s'", search_query)
                 continue
 
-            logger.info("Blinkit: found %d products for '%s'", len(products), search_query)
-
             best = choose_best_product(item_name, products)
-
             if not best:
                 logger.warning("Blinkit: selector returned None for '%s'", item_name)
                 continue
 
-            logger.info("Blinkit: selected '%s' @ Rs%s", best["name"], best["price"])
-            progress.update(3, f"Blinkit: adding '{best['name']}' @ Rs{best['price']}")
+            logger.info("Blinkit: selected '%s' @ Rs%s (qty %d)", best["name"], best["price"], quantity)
+            progress.update(3, f"Blinkit: adding '{best['name']}' x{quantity} @ Rs{best['price']}")
 
-            self.add_to_cart(best)
+            self.add_to_cart(best, units=quantity)
             self.cart.append({"name": best["name"], "price": best["price"]})
 
         return self.cart
+
+    def clear_cart(self):
+        # Keep clicking the stepper decrement button until there are no items left.
+        # We cap at 100 clicks as a safety net in case a selector never disappears.
+        logger.info("Blinkit: clearing cart from previous run")
+        try:
+            attempts = 0
+            while attempts < 100:
+                # Blinkit uses a button with a minus icon inside cart items
+                minus_btns = self.page.locator(
+                    "button[class*='decrement'], "
+                    "button[aria-label*='Remove'], "
+                    "button[aria-label*='Decrease']"
+                )
+                if minus_btns.count() == 0:
+                    break
+                minus_btns.first.click()
+                self.page.wait_for_timeout(400)
+                attempts += 1
+        except Exception as exc:
+            # Cart may already be empty or layout changed — not critical
+            logger.debug("Blinkit clear_cart: %s", exc)
 
     def search_blinkit(self, item):
         try:
@@ -101,22 +119,39 @@ class BlinkitBot:
                 price_match = re.search(r"₹\s*(\d+)", text)
                 if not price_match:
                     continue
-                price = int(price_match.group(1))
-                products.append({"name": name, "price": price, "card": card})
-
+                products.append({
+                    "name": name,
+                    "price": int(price_match.group(1)),
+                    "card": card,
+                })
             except Exception as exc:
-                logger.debug("Blinkit: skipping product %d due to: %s", i, exc)
-                continue
+                logger.debug("Blinkit: skipping product %d: %s", i, exc)
 
         return products
 
-    def add_to_cart(self, product):
+    def add_to_cart(self, product, units=1):
         try:
             card = product["card"]
             card.scroll_into_view_if_needed()
+
             add_btn = card.locator("text=ADD")
-            if add_btn.count() > 0:
-                add_btn.first.click()
-                time.sleep(1)
+            if add_btn.count() == 0:
+                logger.warning("Blinkit: ADD button not found for '%s'", product["name"])
+                return
+
+            add_btn.first.click()
+            time.sleep(0.8)
+
+            # Click the "+" stepper for any quantity above 1
+            if units > 1:
+                plus_btn = card.locator(
+                    "button[aria-label*='Increase'], "
+                    "button[class*='increment']"
+                )
+                for _ in range(units - 1):
+                    if plus_btn.count() > 0:
+                        plus_btn.first.click()
+                        time.sleep(0.4)
+
         except Exception as exc:
-            logger.warning("Blinkit: failed to add '%s' to cart: %s", product["name"], exc)
+            logger.warning("Blinkit: failed to add '%s': %s", product["name"], exc)
