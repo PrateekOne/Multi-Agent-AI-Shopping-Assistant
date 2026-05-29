@@ -2,6 +2,8 @@ import logging
 import re
 import time
 
+from agents.quantity_calculator import calculate_units_needed
+from agents.query_normalizer import normalize_query
 from agents.selector_agent import choose_best_product
 from memory import get_preferred_brand
 from utils.playwright_manager import get_browser
@@ -24,26 +26,33 @@ class BlinkitBot:
         if not self.page:
             self.start()
 
-        # Clear whatever is left in the cart from the previous run
         self.clear_cart()
 
         for item in items:
             item_name = item["name"]
-            quantity = int(item.get("amount", 1))
+            requested_amount = item.get("amount", 1)
+            requested_unit = item.get("unit", "unit")
+
+            # Convert colloquial names to proper searchable names.
+            # search_name is used for both the site search AND the ranker query
+            # so that relevance scoring is against the real product name.
+            # e.g. "green pringles" -> "Pringles Sour Cream Onion" for both.
+            search_name = normalize_query(item_name)
+            if search_name != item_name:
+                progress.update(0, f"Blinkit: '{item_name}' -> searching as '{search_name}'")
+
             preferred_brand = get_preferred_brand(item_name)
 
-            # Build search query — if brand string already contains the item
-            # words we use the brand alone, otherwise prepend it
             if preferred_brand:
-                item_words = set(item_name.lower().split())
+                item_words = set(search_name.lower().split())
                 brand_words = set(preferred_brand.lower().split())
                 if item_words <= brand_words:
                     search_query = preferred_brand
                 else:
-                    search_query = f"{preferred_brand} {item_name}"
+                    search_query = f"{preferred_brand} {search_name}"
                 progress.update(5, f"Blinkit: searching '{search_query}' (preferred brand)")
             else:
-                search_query = item_name
+                search_query = search_name
                 progress.update(5, f"Blinkit: searching '{search_query}'")
 
             products = self.search_blinkit(search_query)
@@ -51,27 +60,32 @@ class BlinkitBot:
                 logger.warning("Blinkit: no results for '%s'", search_query)
                 continue
 
-            best = choose_best_product(item_name, products)
+            # Use search_name (the resolved product name) for ranking, not the
+            # original colloquial input — this is what fixes "green pringles"
+            # picking Original instead of Sour Cream & Onion
+            best = choose_best_product(search_name, products)
             if not best:
-                logger.warning("Blinkit: selector returned None for '%s'", item_name)
+                logger.warning("Blinkit: selector returned None for '%s'", search_name)
                 continue
 
-            logger.info("Blinkit: selected '%s' @ Rs%s (qty %d)", best["name"], best["price"], quantity)
-            progress.update(3, f"Blinkit: adding '{best['name']}' x{quantity} @ Rs{best['price']}")
+            units_to_add = calculate_units_needed(requested_amount, requested_unit, best["name"])
 
-            self.add_to_cart(best, units=quantity)
-            self.cart.append({"name": best["name"], "price": best["price"]})
+            logger.info(
+                "Blinkit: selected '%s' @ Rs%s | requested %s %s -> adding %d pack(s)",
+                best["name"], best["price"], requested_amount, requested_unit, units_to_add,
+            )
+            progress.update(3, f"Blinkit: adding '{best['name']}' x{units_to_add} @ Rs{best['price']}")
+
+            self.add_to_cart(best, units=units_to_add)
+            self.cart.append({"name": best["name"], "price": best["price"] * units_to_add})
 
         return self.cart
 
     def clear_cart(self):
-        # Keep clicking the stepper decrement button until there are no items left.
-        # We cap at 100 clicks as a safety net in case a selector never disappears.
         logger.info("Blinkit: clearing cart from previous run")
         try:
             attempts = 0
             while attempts < 100:
-                # Blinkit uses a button with a minus icon inside cart items
                 minus_btns = self.page.locator(
                     "button[class*='decrement'], "
                     "button[aria-label*='Remove'], "
@@ -83,7 +97,6 @@ class BlinkitBot:
                 self.page.wait_for_timeout(400)
                 attempts += 1
         except Exception as exc:
-            # Cart may already be empty or layout changed — not critical
             logger.debug("Blinkit clear_cart: %s", exc)
 
     def search_blinkit(self, item):
@@ -142,7 +155,6 @@ class BlinkitBot:
             add_btn.first.click()
             time.sleep(0.8)
 
-            # Click the "+" stepper for any quantity above 1
             if units > 1:
                 plus_btn = card.locator(
                     "button[aria-label*='Increase'], "

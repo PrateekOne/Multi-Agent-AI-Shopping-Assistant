@@ -2,6 +2,8 @@ import logging
 import re
 import time
 
+from agents.quantity_calculator import calculate_units_needed
+from agents.query_normalizer import normalize_query
 from agents.selector_agent import choose_best_product
 from utils.playwright_manager import get_browser
 
@@ -23,36 +25,46 @@ class ZeptoBot:
         if not self.page:
             self.start()
 
-        # Clear whatever is left in the cart from the previous run
         self.clear_cart()
 
         for item in items:
             item_name = item["name"]
-            quantity = int(item.get("amount", 1))
+            requested_amount = item.get("amount", 1)
+            requested_unit = item.get("unit", "unit")
 
-            progress.update(5, f"Zepto: searching '{item_name}'")
+            # Resolve colloquial name before searching AND before ranking.
+            # Using search_name for both ensures the ranker scores against
+            # the real product name, not the informal one.
+            search_name = normalize_query(item_name)
+            if search_name != item_name:
+                progress.update(0, f"Zepto: '{item_name}' -> searching as '{search_name}'")
 
-            products = self.search_zepto(item_name)
+            progress.update(5, f"Zepto: searching '{search_name}'")
+
+            products = self.search_zepto(search_name)
             if not products:
-                logger.warning("Zepto: no results for '%s'", item_name)
+                logger.warning("Zepto: no results for '%s'", search_name)
                 continue
 
-            best = choose_best_product(item_name, products)
+            best = choose_best_product(search_name, products)
             if not best:
-                logger.warning("Zepto: selector returned None for '%s'", item_name)
+                logger.warning("Zepto: selector returned None for '%s'", search_name)
                 continue
 
-            logger.info("Zepto: selected '%s' @ Rs%s (qty %d)", best["name"], best["price"], quantity)
-            progress.update(3, f"Zepto: adding '{best['name']}' x{quantity} @ Rs{best['price']}")
+            units_to_add = calculate_units_needed(requested_amount, requested_unit, best["name"])
 
-            self.add_to_cart(best, units=quantity)
-            self.cart.append({"name": best["name"], "price": best["price"]})
+            logger.info(
+                "Zepto: selected '%s' @ Rs%s | requested %s %s -> adding %d pack(s)",
+                best["name"], best["price"], requested_amount, requested_unit, units_to_add,
+            )
+            progress.update(3, f"Zepto: adding '{best['name']}' x{units_to_add} @ Rs{best['price']}")
+
+            self.add_to_cart(best, units=units_to_add)
+            self.cart.append({"name": best["name"], "price": best["price"] * units_to_add})
 
         return self.cart
 
     def clear_cart(self):
-        # Decrement all cart items until the cart is empty.
-        # Cap at 100 to avoid an infinite loop if a button never goes away.
         logger.info("Zepto: clearing cart from previous run")
         try:
             attempts = 0
@@ -92,12 +104,10 @@ class ZeptoBot:
         for i in range(count):
             try:
                 card = cards.nth(i)
-
                 name_el = card.locator("div[data-slot-id='ProductName'] span")
                 price_el = card.locator("div[data-slot-id='EdlpPrice'] span")
                 qty_el = card.locator("div[data-slot-id='PackSize'] span")
 
-                # Skip cards that are missing any of the three fields we need
                 if name_el.count() == 0 or price_el.count() == 0 or qty_el.count() == 0:
                     continue
 
@@ -130,7 +140,6 @@ class ZeptoBot:
             add_btn.first.click()
             time.sleep(0.8)
 
-            # Keep clicking "+" for quantities above 1
             if units > 1:
                 plus_btn = card.locator("button[aria-label='Increase quantity']")
                 for _ in range(units - 1):
