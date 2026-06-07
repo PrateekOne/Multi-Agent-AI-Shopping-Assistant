@@ -39,12 +39,9 @@ User input:
     try:
         response = clean_json(response)
         data = json.loads(response)
-
         if "priority_items" not in data or "item_quantities" not in data:
             raise ValueError("Invalid format")
-
         return normalize_output(data)
-
     except Exception:
         return fallback_parser(prompt)
 
@@ -61,53 +58,62 @@ def clean_json(text):
 def normalize_output(data):
     items = data.get("priority_items", [])
     quantities = data.get("item_quantities", {})
-    fixed_quantities = {}
-
+    fixed = {}
     for item in items:
-        if item not in quantities:
-            fixed_quantities[item] = {"amount": 1, "unit": "unit"}
-        else:
-            q = quantities[item]
-            fixed_quantities[item] = {
-                "amount": q.get("amount", 1),
-                "unit": q.get("unit", "unit"),
-            }
-
+        q = quantities.get(item, {})
+        fixed[item] = {
+            "amount": q.get("amount", 1),
+            "unit":   q.get("unit", "unit"),
+        }
     return {
-        "budget": data.get("budget", None),
-        "priority_items": items,
-        "item_quantities": fixed_quantities,
+        "budget":          data.get("budget", None),
+        "priority_items":  items,
+        "item_quantities": fixed,
     }
 
 
-# Matches an optional leading quantity like "2 litre", "500g", "1.5 kg" at the
-# start of an item string. Used by fallback_parser when the LLM is unavailable.
+# Regex: optional leading "<number> <unit>" before the actual item name.
+# Handles: "2 litres of milk", "500g flour", "3 packs biscuits"
 _LEADING_QTY_RE = re.compile(
     r"^(\d+(?:\.\d+)?)\s*"
-    r"(ml|l\b|ltr|litres?|liters?|kg|g\b|gm|gms?|pcs?|packs?|pieces?|units?)?\s+(.+)$",
+    r"(ml|l\b|ltr|litres?|liters?|kg|g\b|gm|gms?|pcs?|packs?|pieces?|units?)?"
+    r"\s+(.+)$",
     re.IGNORECASE,
 )
 
-# Canonical unit names for the unit strings the regex can capture
 _UNIT_CANONICAL = {
     "ml": "ml",
-    "l": "ltr", "ltr": "ltr",
-    "litre": "ltr", "litres": "ltr", "liter": "ltr", "liters": "ltr",
-    "kg": "kg",
-    "g": "g", "gm": "g", "gms": "g",
+    "l": "ltr", "ltr": "ltr", "litre": "ltr", "litres": "ltr",
+    "liter": "ltr", "liters": "ltr",
+    "kg": "kg", "g": "g", "gm": "g", "gms": "g",
     "pc": "pcs", "pcs": "pcs",
     "pack": "pack", "packs": "pack",
     "piece": "pcs", "pieces": "pcs",
     "unit": "unit", "units": "unit",
 }
 
+# Words that appear between a quantity and the actual item name.
+# "2 liters OF milk" — strip "of" so the name becomes "milk" not "of milk".
+_LEADING_PREPS = {"of", "from", "the", "a", "an", "some", "fresh"}
+
+
+def _clean_name(name: str) -> str:
+    """Strip leading prepositions/articles that follow a quantity expression."""
+    words = name.split()
+    while words and words[0].lower() in _LEADING_PREPS:
+        words.pop(0)
+    return " ".join(words) if words else name
+
 
 def fallback_parser(prompt):
     """
     Regex-based parser used when the LLM is offline or returns bad JSON.
 
-    Handles quantity prefixes so "2 litre milk" correctly produces
-    {name: "milk", amount: 2, unit: "ltr"} instead of losing the quantity.
+    Correctly handles:
+      "2 liters of milk"   -> name="milk",    amount=2,   unit="ltr"
+      "500g of flour"      -> name="flour",   amount=500, unit="g"
+      "3 packs biscuits"   -> name="biscuits", amount=3,  unit="pack"
+      "milk"               -> name="milk",    amount=1,   unit="unit"
     """
     parts = prompt.replace(",", " and ").split("and")
     items = []
@@ -120,22 +126,23 @@ def fallback_parser(prompt):
 
         match = _LEADING_QTY_RE.match(part)
         if match:
-            raw_amount = match.group(1)
+            amount   = float(match.group(1))
             raw_unit = match.group(2) or "unit"
-            name = match.group(3).strip()
-            amount = float(raw_amount)
-            unit = _UNIT_CANONICAL.get(raw_unit.lower(), "unit")
+            unit     = _UNIT_CANONICAL.get(raw_unit.lower(), "unit")
+            name     = _clean_name(match.group(3).strip())
         else:
-            # No leading quantity — treat whole string as item name, qty = 1
-            name = part
+            name   = part
             amount = 1
-            unit = "unit"
+            unit   = "unit"
+
+        if not name:
+            continue
 
         items.append(name)
         quantities[name] = {"amount": amount, "unit": unit}
 
     return {
-        "budget": None,
-        "priority_items": items,
+        "budget":          None,
+        "priority_items":  items,
         "item_quantities": quantities,
     }
