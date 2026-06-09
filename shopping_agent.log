@@ -504,3 +504,250 @@
 2026-06-07 11:19:41 | INFO     | agents.selector_agent | LLM fallback failed; using top-ranked: 'Country Delight Cow Fresh Milk | Pouch 1 pack (450 ml)'
 2026-06-07 11:19:41 | DEBUG    | agents.quantity_calculator | Unit mismatch: requested ml but product is in ct for 'Country Delight Cow Fresh Milk | Pouch 1 pack (450'; defaulting to 1
 2026-06-07 11:19:41 | INFO     | automation.zepto_bot | Zepto: selected 'Country Delight Cow Fresh Milk | Pouch 1 pack (450 ml)' @ Rs46 | requested 2.0 ltr -> adding 1 pack(s)
+2026-06-07 11:24:57 | INFO     | memory | Brand preferences DISABLED.
+2026-06-07 11:24:59 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-07 11:24:59 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-06-07 11:25:01 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-07 11:25:01 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-06-07 11:25:04 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-07 11:25:04 | INFO     | utils.playwright_manager | Starting browser | session=C:\Users\ganni\.shopping_agent\browser_session
+2026-06-07 11:25:04 | DEBUG    | asyncio | Using proactor: IocpProactor
+2026-06-07 11:25:05 | INFO     | utils.playwright_manager | Browser started.
+2026-06-07 11:25:11 | INFO     | automation.blinkit_bot | Blinkit: clearing cart from previous run
+2026-06-07 11:25:16 | INFO     | agents.selector_agent | Selecting product for 'milk' | 24 candidates | preferred='none'
+2026-06-07 11:25:16 | INFO     | agents.product_ranker | Ranking 10 products for query='milk'
+2026-06-07 11:25:16 | DEBUG    | agents.product_ranker | Blocked: 'Amul Gold Full Cream Milk 500 ml'
+2026-06-07 11:25:16 | DEBUG    | agents.product_ranker | Blocked: 'Heritage Full Cream Milk 500 ml'
+2026-06-07 11:25:16 | DEBUG    | agents.product_ranker | [0.379] Country Delight Buffalo Fresh Milk 450 ml          rel=0.59 val=0.06 brand=0.85
+2026-06-07 11:25:16 | DEBUG    | agents.product_ranker | [0.629] Heritage Daily Health Toned Milk 500 ml            rel=0.55 val=0.94 brand=0.85
+2026-06-07 11:25:16 | DEBUG    | agents.product_ranker | [0.662] Amul Taaza Toned Milk 500 ml                       rel=0.59 val=1.00 brand=0.85
+2026-06-07 11:25:16 | DEBUG    | agents.product_ranker | [0.578] Godrej Jersey Toned Milk 500 ml                    rel=0.59 val=0.97 brand=0.35
+2026-06-07 11:25:16 | DEBUG    | agents.product_ranker | [0.580] Heritage Special Long Life Milk (90 Days Shelf Lif rel=0.48 val=0.87 brand=0.85
+2026-06-07 11:25:16 | DEBUG    | agents.product_ranker | [0.597] Arokya Toned Milk 500 ml                           rel=0.63 val=0.97 brand=0.35
+2026-06-07 11:25:16 | DEBUG    | agents.product_ranker | [0.470] Country Delight Cow Milk 450 ml                    rel=0.59 val=0.36 brand=0.85
+2026-06-07 11:25:16 | DEBUG    | agents.product_ranker | [0.273] Sids Farm Buffalo A2 Milk 500 ml                   rel=0.55 val=0.00 brand=0.35
+2026-06-07 11:25:16 | INFO     | agents.product_ranker | Top pick: 'Amul Taaza Toned Milk 500 ml' | score=0.662 | gap=0.032
+2026-06-07 11:25:16 | INFO     | agents.selector_agent | Scores too close (gap=0.032); asking LLM to disambiguate
+2026-06-07 11:25:18 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-07 11:25:18 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-06-07 11:25:20 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-07 11:25:20 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-06-07 11:25:23 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-07 11:25:23 | WARNING  | agents.selector_agent | LLM returned empty response for 'milk'
+2026-06-07 11:25:23 | INFO     | agents.selector_agent | LLM fallback failed; using top-ranked: 'Amul Taaza Toned Milk 500 ml'
+2026-06-07 11:25:23 | INFO     | agents.quantity_calculator | Quantity calc: 2000ml requested / 500ml per pack = 4 pack(s) of 'Amul Taaza Toned Milk 500 ml'
+2026-06-07 11:25:23 | INFO     | automation.blinkit_bot | Blinkit: selected 'Amul Taaza Toned Milk 500 ml' @ Rs30 | requested 2.0 ltr -> adding 4 pack(s)
+2026-06-07 11:25:25 | DEBUG    | agents.query_normalizer | Query normalized (local table): 'blue lays' -> 'Lays Classic Salted'
+2026-06-07 11:25:27 | INFO     | agents.selector_agent | Selecting product for 'Lays Classic Salted' | 24 candidates | preferred='none'
+2026-06-07 11:25:27 | INFO     | agents.product_ranker | Ranking 10 products for query='Lays Classic Salted'
+2026-06-07 11:25:27 | DEBUG    | agents.product_ranker | [0.692] Lay's Classic Salted Potato Chips 51 g             rel=0.87 val=0.97 brand=0.35
+2026-06-07 11:25:27 | DEBUG    | agents.product_ranker | [0.546] Lay's Classic Salted Flavor Potato Chips - Buy 2 G rel=0.66 val=0.76 brand=0.35
+2026-06-07 11:25:27 | DEBUG    | agents.product_ranker | [0.503] Haldiram's Classic Salted Potato Chips 89 g        rel=0.29 val=0.97 brand=0.65
+2026-06-07 11:25:27 | DEBUG    | agents.product_ranker | [0.466] Parle Classic Salted Potato Chips (Celebration Pac rel=0.22 val=0.93 brand=0.65
+2026-06-07 11:25:27 | DEBUG    | agents.product_ranker | [0.441] Crax Simply Salted Potato Chips Snacks 85 g        rel=0.22 val=1.00 brand=0.35
+2026-06-07 11:25:27 | DEBUG    | agents.product_ranker | [0.384] Bingo Original Style Salt Potato Chips 43 g        rel=0.00 val=0.96 brand=0.65
+2026-06-07 11:25:27 | DEBUG    | agents.product_ranker | [0.420] Lay's American Style Cream & Onion Potato Chips 58 rel=0.20 val=0.96 brand=0.35
+2026-06-07 11:25:27 | DEBUG    | agents.product_ranker | [0.152] Lay's Rock Salt Potato Chips 48 g                  rel=0.25 val=0.00 brand=0.35
+2026-06-07 11:25:27 | DEBUG    | agents.product_ranker | [0.440] Balaji Crunchex Simply Salted Potato Wafers 140 g  rel=0.22 val=1.00 brand=0.35
+2026-06-07 11:25:27 | DEBUG    | agents.product_ranker | [0.407] Lay's West Indies Hot n Sweet Chilli Flavour Potat rel=0.17 val=0.96 brand=0.35
+2026-06-07 11:25:27 | INFO     | agents.product_ranker | Top pick: 'Lay's Classic Salted Potato Chips 51 g' | score=0.692 | gap=0.146
+2026-06-07 11:25:27 | INFO     | agents.selector_agent | Confident pick (gap=0.146): 'Lay's Classic Salted Potato Chips 51 g'
+2026-06-07 11:25:27 | INFO     | automation.blinkit_bot | Blinkit: selected 'Lay's Classic Salted Potato Chips 51 g' @ Rs20 | requested 1 unit -> adding 1 pack(s)
+2026-06-07 11:25:32 | INFO     | automation.zepto_bot | Zepto: clearing cart from previous run
+2026-06-07 11:25:34 | INFO     | agents.selector_agent | Selecting product for 'milk' | 30 candidates | preferred='none'
+2026-06-07 11:25:34 | INFO     | agents.product_ranker | Ranking 10 products for query='milk'
+2026-06-07 11:25:34 | DEBUG    | agents.product_ranker | Blocked: 'Country Delight Natural Fresh Cow Milk | 25g Protein | Pouch 1 pack (450 ml)'
+2026-06-07 11:25:34 | DEBUG    | agents.product_ranker | Blocked: 'Amul Gold Full Cream Fresh Milk | Pouch 1 pack (500 ml)'
+2026-06-07 11:25:34 | DEBUG    | agents.product_ranker | [0.557] Country Delight Cow Fresh Milk | Pouch 1 pack (450 rel=0.52 val=0.74 brand=0.85
+2026-06-07 11:25:34 | DEBUG    | agents.product_ranker | [0.548] Nandini Toned Fresh Milk | Pouch 1 pack (500 ml)   rel=0.55 val=0.92 brand=0.35
+2026-06-07 11:25:34 | DEBUG    | agents.product_ranker | [0.503] Nandini Goodlife Toned UHT Milk (Fino Pouch) 1 pac rel=0.48 val=0.86 brand=0.35
+2026-06-07 11:25:34 | DEBUG    | agents.product_ranker | [0.540] Country Delight Buffalo Fresh Milk | Pouch 1 pack  rel=0.52 val=0.68 brand=0.85
+2026-06-07 11:25:34 | DEBUG    | agents.product_ranker | [0.540] Nandini Standardized Fresh Milk | Pouch 1 pack (50 rel=0.55 val=0.89 brand=0.35
+2026-06-07 11:25:34 | DEBUG    | agents.product_ranker | [0.287] Akshayakalpa Organic Cow Milk - Uht 1 pack (1 L)   rel=0.59 val=0.00 brand=0.35
+2026-06-07 11:25:34 | DEBUG    | agents.product_ranker | [0.539] Nandini Good Life Toned UHT Milk (Fino Pouch) 1 pa rel=0.47 val=1.00 brand=0.35
+2026-06-07 11:25:34 | DEBUG    | agents.product_ranker | [0.460] Milky Mist Double Toned Milk 1 L                   rel=0.63 val=0.51 brand=0.35
+2026-06-07 11:25:34 | INFO     | agents.product_ranker | Top pick: 'Country Delight Cow Fresh Milk | Pouch 1 pack (450 ml)' | score=0.557 | gap=0.009
+2026-06-07 11:25:34 | INFO     | agents.selector_agent | Scores too close (gap=0.009); asking LLM to disambiguate
+2026-06-07 11:25:36 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-07 11:25:36 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-06-07 11:25:38 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-07 11:25:38 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-06-07 11:25:41 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-07 11:25:41 | WARNING  | agents.selector_agent | LLM returned empty response for 'milk'
+2026-06-07 11:25:41 | INFO     | agents.selector_agent | LLM fallback failed; using top-ranked: 'Country Delight Cow Fresh Milk | Pouch 1 pack (450 ml)'
+2026-06-07 11:25:41 | DEBUG    | agents.quantity_calculator | Unit mismatch: requested ml but product is in ct for 'Country Delight Cow Fresh Milk | Pouch 1 pack (450'; defaulting to 1
+2026-06-07 11:25:41 | INFO     | automation.zepto_bot | Zepto: selected 'Country Delight Cow Fresh Milk | Pouch 1 pack (450 ml)' @ Rs46 | requested 2.0 ltr -> adding 1 pack(s)
+2026-06-07 11:25:41 | DEBUG    | agents.query_normalizer | Query normalized (local table): 'blue lays' -> 'Lays Classic Salted'
+2026-06-07 11:25:42 | INFO     | agents.selector_agent | Selecting product for 'Lays Classic Salted' | 30 candidates | preferred='none'
+2026-06-07 11:25:42 | INFO     | agents.product_ranker | Ranking 10 products for query='Lays Classic Salted'
+2026-06-07 11:25:42 | DEBUG    | agents.product_ranker | [0.633] Lay's Classic Salted | Crunchy Potato Chips 1 pack rel=0.70 val=1.00 brand=0.35
+2026-06-07 11:25:42 | DEBUG    | agents.product_ranker | [0.633] Lay's Classic Salted | Crunchy Potato Chips 1 pack rel=0.70 val=1.00 brand=0.35
+2026-06-07 11:25:42 | DEBUG    | agents.product_ranker | [0.470] Lay's Classic Salted | Crunchy Potato Chips 1 pack rel=0.74 val=0.40 brand=0.35
+2026-06-07 11:25:42 | DEBUG    | agents.product_ranker | [0.052] Red Rock Deli Kettle Chips Basil Thai | No Palm Oi rel=0.00 val=0.00 brand=0.35
+2026-06-07 11:25:42 | DEBUG    | agents.product_ranker | [0.245] Modern Kitchens Potato Wafers Salted | Crispy & Li rel=0.18 val=0.40 brand=0.35
+2026-06-07 11:25:42 | DEBUG    | agents.product_ranker | [0.455] Lay's Classic Salted | Crunchy Potato Chips 1 pack rel=0.74 val=0.35 brand=0.35
+2026-06-07 11:25:42 | DEBUG    | agents.product_ranker | [0.374] Lay's American Cream & Onion Flavour | Potato Chip rel=0.17 val=0.85 brand=0.35
+2026-06-07 11:25:42 | DEBUG    | agents.product_ranker | [0.282] Haldiram's Chips | Classic Salted | Crispy & Salty rel=0.20 val=0.35 brand=0.65
+2026-06-07 11:25:42 | DEBUG    | agents.product_ranker | [0.374] Lay's India's Magic Masala | Crunchy Potato Chips  rel=0.17 val=0.85 brand=0.35
+2026-06-07 11:25:42 | DEBUG    | agents.product_ranker | [0.245] Bingo! Original Style Salt Sprinkled | Flat Cut Sa rel=0.14 val=0.30 brand=0.65
+2026-06-07 11:25:42 | DEBUG    | agents.product_ranker | Dedup: dropped 'Lay's Classic Salted | Crunchy Potato Chips 1 pack (48 g or '
+2026-06-07 11:25:42 | INFO     | agents.product_ranker | Top pick: 'Lay's Classic Salted | Crunchy Potato Chips 1 pack (48 g or ' | score=0.633 | gap=0.162
+2026-06-07 11:25:42 | INFO     | agents.selector_agent | Confident pick (gap=0.162): 'Lay's Classic Salted | Crunchy Potato Chips 1 pack (48 g or 52.9 g)'
+2026-06-07 11:25:42 | INFO     | automation.zepto_bot | Zepto: selected 'Lay's Classic Salted | Crunchy Potato Chips 1 pack (48 g or 52.9 g)' @ Rs20 | requested 1 unit -> adding 1 pack(s)
+2026-06-09 13:05:15 | INFO     | memory | Brand preferences DISABLED.
+2026-06-09 13:05:17 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 13:05:17 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-06-09 13:05:19 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 13:05:19 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-06-09 13:05:22 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 13:05:22 | INFO     | utils.playwright_manager | Starting browser | session=C:\Users\ganni\.shopping_agent\browser_session
+2026-06-09 13:05:22 | DEBUG    | asyncio | Using proactor: IocpProactor
+2026-06-09 13:05:40 | INFO     | utils.playwright_manager | Browser started.
+2026-06-09 13:05:46 | INFO     | automation.blinkit_bot | Blinkit: clearing cart from previous run
+2026-06-09 13:05:47 | INFO     | agents.selector_agent | Selecting product for 'milk' | 24 candidates | preferred='none'
+2026-06-09 13:05:47 | INFO     | agents.product_ranker | Ranking 10 products for query='milk'
+2026-06-09 13:05:47 | DEBUG    | agents.product_ranker | Blocked: 'Amul Gold Full Cream Milk 500 ml'
+2026-06-09 13:05:47 | DEBUG    | agents.product_ranker | Blocked: 'Heritage Full Cream Milk 500 ml'
+2026-06-09 13:05:47 | DEBUG    | agents.product_ranker | [0.362] Country Delight Buffalo Fresh Milk 450 ml          rel=0.59 val=0.00 brand=0.85
+2026-06-09 13:05:47 | DEBUG    | agents.product_ranker | [0.628] Heritage Daily Health Toned Milk 500 ml            rel=0.55 val=0.94 brand=0.85
+2026-06-09 13:05:47 | DEBUG    | agents.product_ranker | [0.662] Amul Taaza Toned Milk 500 ml                       rel=0.59 val=1.00 brand=0.85
+2026-06-09 13:05:47 | DEBUG    | agents.product_ranker | [0.458] Country Delight Cow Milk 450 ml                    rel=0.59 val=0.32 brand=0.85
+2026-06-09 13:05:47 | DEBUG    | agents.product_ranker | [0.577] Heritage Special Long Life Milk (90 Days Shelf Lif rel=0.48 val=0.86 brand=0.85
+2026-06-09 13:05:47 | DEBUG    | agents.product_ranker | [0.596] Arokya Toned Milk 500 ml                           rel=0.63 val=0.97 brand=0.35
+2026-06-09 13:05:47 | DEBUG    | agents.product_ranker | [0.428] Akshayakalpa Organic Cow Milk (Pasteurized) 500 ml rel=0.55 val=0.52 brand=0.35
+2026-06-09 13:05:47 | DEBUG    | agents.product_ranker | [0.577] Godrej Jersey Toned Milk 500 ml                    rel=0.59 val=0.97 brand=0.35
+2026-06-09 13:05:47 | INFO     | agents.product_ranker | Top pick: 'Amul Taaza Toned Milk 500 ml' | score=0.662 | gap=0.034
+2026-06-09 13:05:47 | INFO     | agents.selector_agent | Scores too close (gap=0.034); asking LLM to disambiguate
+2026-06-09 13:05:49 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 13:05:49 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-06-09 13:05:52 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 13:05:52 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-06-09 13:05:55 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 13:05:55 | WARNING  | agents.selector_agent | LLM returned empty response for 'milk'
+2026-06-09 13:05:55 | INFO     | agents.selector_agent | LLM fallback failed; using top-ranked: 'Amul Taaza Toned Milk 500 ml'
+2026-06-09 13:05:55 | INFO     | agents.quantity_calculator | Qty calc: 2000ml / 500ml per pack = 4 pack(s) of 'Amul Taaza Toned Milk 500 ml'
+2026-06-09 13:05:55 | INFO     | automation.blinkit_bot | Blinkit: selected 'Amul Taaza Toned Milk 500 ml' @ Rs30 | requested 2.0 ltr -> adding 4 pack(s)
+2026-06-09 13:06:02 | INFO     | automation.zepto_bot | Zepto: clearing cart from previous run
+2026-06-09 13:06:04 | INFO     | agents.selector_agent | Selecting product for 'milk' | 30 candidates | preferred='none'
+2026-06-09 13:06:04 | INFO     | agents.product_ranker | Ranking 10 products for query='milk'
+2026-06-09 13:06:04 | DEBUG    | agents.product_ranker | Blocked: 'Country Delight Natural Fresh Cow Milk | 25g Protein | Pouch 1 pack (450 ml)'
+2026-06-09 13:06:04 | DEBUG    | agents.product_ranker | Blocked: 'Amul Gold Full Cream Fresh Milk | Pouch 1 pack (500 ml)'
+2026-06-09 13:06:04 | DEBUG    | agents.product_ranker | [0.557] Country Delight Cow Fresh Milk | Pouch 1 pack (450 rel=0.52 val=0.74 brand=0.85
+2026-06-09 13:06:04 | DEBUG    | agents.product_ranker | [0.548] Nandini Toned Fresh Milk | Pouch 1 pack (500 ml)   rel=0.55 val=0.92 brand=0.35
+2026-06-09 13:06:04 | DEBUG    | agents.product_ranker | [0.540] Nandini Standardized Fresh Milk | Pouch 1 pack (50 rel=0.55 val=0.89 brand=0.35
+2026-06-09 13:06:04 | DEBUG    | agents.product_ranker | [0.540] Country Delight Buffalo Fresh Milk | Pouch 1 pack  rel=0.52 val=0.68 brand=0.85
+2026-06-09 13:06:04 | DEBUG    | agents.product_ranker | [0.503] Nandini Goodlife Toned UHT Milk (Fino Pouch) 1 pac rel=0.48 val=0.86 brand=0.35
+2026-06-09 13:06:04 | DEBUG    | agents.product_ranker | [0.461] Milky Mist Toned Milk 1 L                          rel=0.70 val=0.43 brand=0.35
+2026-06-09 13:06:04 | DEBUG    | agents.product_ranker | [0.287] Akshayakalpa Organic Cow Milk - Uht 1 pack (1 L)   rel=0.59 val=0.00 brand=0.35
+2026-06-09 13:06:04 | DEBUG    | agents.product_ranker | [0.539] Nandini Good Life Toned UHT Milk (Fino Pouch) 1 pa rel=0.47 val=1.00 brand=0.35
+2026-06-09 13:06:04 | INFO     | agents.product_ranker | Top pick: 'Country Delight Cow Fresh Milk | Pouch 1 pack (450 ml)' | score=0.557 | gap=0.009
+2026-06-09 13:06:04 | INFO     | agents.selector_agent | Scores too close (gap=0.009); asking LLM to disambiguate
+2026-06-09 13:06:06 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 13:06:06 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-06-09 13:06:08 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 13:06:08 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-06-09 13:06:11 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 13:06:11 | WARNING  | agents.selector_agent | LLM returned empty response for 'milk'
+2026-06-09 13:06:11 | INFO     | agents.selector_agent | LLM fallback failed; using top-ranked: 'Country Delight Cow Fresh Milk | Pouch 1 pack (450 ml)'
+2026-06-09 13:06:11 | DEBUG    | agents.quantity_calculator | Unit mismatch: requested ml but product in ct for 'Country Delight Cow Fresh Milk | Pouch 1 pack (450'; defaulting to 1
+2026-06-09 13:06:11 | INFO     | automation.zepto_bot | Zepto: selected 'Country Delight Cow Fresh Milk | Pouch 1 pack (450 ml)' @ Rs46 | requested 2.0 ltr -> adding 1 pack(s)
+2026-06-09 21:12:24 | INFO     | memory | Brand preferences DISABLED.
+2026-06-09 21:12:26 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 21:12:26 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-06-09 21:12:28 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 21:12:28 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-06-09 21:12:31 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 21:12:31 | INFO     | utils.playwright_manager | Starting browser | session=C:\Users\ganni\.shopping_agent\browser_session
+2026-06-09 21:12:31 | DEBUG    | asyncio | Using proactor: IocpProactor
+2026-06-09 21:12:34 | INFO     | utils.playwright_manager | Browser started.
+2026-06-09 21:12:40 | INFO     | automation.blinkit_bot | Blinkit: clearing cart from previous run
+2026-06-09 21:12:49 | INFO     | agents.selector_agent | Selecting product for 'milk' | 24 candidates | preferred='none'
+2026-06-09 21:12:49 | INFO     | agents.product_ranker | Ranking 10 products for query='milk'
+2026-06-09 21:12:49 | DEBUG    | agents.product_ranker | Blocked: 'Godrej Jersey Full Cream Milk 500 ml'
+2026-06-09 21:12:49 | DEBUG    | agents.product_ranker | Blocked: 'Arokya Full Cream Milk 500 ml'
+2026-06-09 21:12:49 | DEBUG    | agents.product_ranker | [0.638] Heritage Daily Health Toned Milk 500 ml            rel=0.55 val=0.97 brand=0.85
+2026-06-09 21:12:49 | DEBUG    | agents.product_ranker | [0.588] Heritage Special Long Life Milk (90 Days Shelf Lif rel=0.48 val=0.89 brand=0.85
+2026-06-09 21:12:49 | DEBUG    | agents.product_ranker | [0.606] Arokya Toned Milk 500 ml                           rel=0.63 val=1.00 brand=0.35
+2026-06-09 21:12:49 | DEBUG    | agents.product_ranker | [0.098] Sunfeast Baked Creations Rich Choco Chip Cookies 1 rel=0.00 val=0.00 brand=0.65
+2026-06-09 21:12:49 | DEBUG    | agents.product_ranker | [0.273] Sids Farm Buffalo A2 Milk 500 ml                   rel=0.55 val=0.00 brand=0.35
+2026-06-09 21:12:49 | DEBUG    | agents.product_ranker | [0.540] Sids Farm Toned Milk 500 ml                        rel=0.59 val=0.84 brand=0.35
+2026-06-09 21:12:49 | DEBUG    | agents.product_ranker | [0.465] Sids Farm Pure Cow Milk 500 ml                     rel=0.59 val=0.59 brand=0.35
+2026-06-09 21:12:49 | DEBUG    | agents.product_ranker | [0.591] Amul Taaza Homogenised Toned Milk 1 ltr            rel=0.59 val=0.77 brand=0.85
+2026-06-09 21:12:49 | INFO     | agents.product_ranker | Top pick: 'Heritage Daily Health Toned Milk 500 ml' | score=0.638 | gap=0.032
+2026-06-09 21:12:49 | INFO     | agents.selector_agent | Scores too close (gap=0.032); asking LLM to disambiguate
+2026-06-09 21:12:51 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 21:12:51 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-06-09 21:12:54 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 21:12:54 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-06-09 21:12:57 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 21:12:57 | WARNING  | agents.selector_agent | LLM returned empty response for 'milk'
+2026-06-09 21:12:57 | INFO     | agents.selector_agent | LLM fallback failed; using top-ranked: 'Heritage Daily Health Toned Milk 500 ml'
+2026-06-09 21:12:57 | INFO     | agents.quantity_calculator | Qty calc: 2000ml / 500ml per pack = 4 pack(s) of 'Heritage Daily Health Toned Milk 500 ml'
+2026-06-09 21:12:57 | INFO     | automation.blinkit_bot | Blinkit: selected 'Heritage Daily Health Toned Milk 500 ml' @ Rs32 | requested 2.0 ltr -> adding 4 pack(s)
+2026-06-09 21:13:04 | INFO     | automation.zepto_bot | Zepto: clearing cart from previous run
+2026-06-09 21:13:07 | INFO     | agents.selector_agent | Selecting product for 'milk' | 30 candidates | preferred='none'
+2026-06-09 21:13:07 | INFO     | agents.product_ranker | Ranking 10 products for query='milk'
+2026-06-09 21:13:07 | DEBUG    | agents.product_ranker | Blocked: 'Amul Gold Full Cream Fresh Milk | Pouch 1 pack (500 ml)'
+2026-06-09 21:13:07 | DEBUG    | agents.product_ranker | Blocked: 'Heritage Full Cream Fresh Milk | Pouch 1 pack (490 ml)'
+2026-06-09 21:13:07 | DEBUG    | agents.product_ranker | Blocked: 'Godrej Jersey Full Cream Fresh Milk | Pouch 1 pack (500 ml or 490 ml)'
+2026-06-09 21:13:07 | DEBUG    | agents.product_ranker | [0.399] Heritage Special Long Life Toned Milk (Pouch) 1 pa rel=0.48 val=0.26 brand=0.85
+2026-06-09 21:13:07 | DEBUG    | agents.product_ranker | [0.494] Amul Taaza Toned Fresh Milk | Pouch 1 pack (500 ml rel=0.52 val=0.53 brand=0.85
+2026-06-09 21:13:07 | DEBUG    | agents.product_ranker | [0.351] Arokya Toned Fresh Milk | Pouch 1 pack (500 ml)    rel=0.55 val=0.26 brand=0.35
+2026-06-09 21:13:07 | DEBUG    | agents.product_ranker | [0.409] Amul Moti Toned Milk | 90 Days Shelf life 1 pack ( rel=0.47 val=0.32 brand=0.85
+2026-06-09 21:13:07 | DEBUG    | agents.product_ranker | [0.395] Godrej Jersey Toned Fresh Milk | Pouch 1 pack (500 rel=0.50 val=0.47 brand=0.35
+2026-06-09 21:13:07 | DEBUG    | agents.product_ranker | [0.234] Sid's Farm Tested Toned Milk (No Antibiotics . No  rel=0.45 val=0.00 brand=0.35
+2026-06-09 21:13:07 | DEBUG    | agents.product_ranker | [0.627] Amul Taaza Homogenised Toned Milk (Tetra Pack) 1 p rel=0.50 val=1.00 brand=0.85
+2026-06-09 21:13:07 | INFO     | agents.product_ranker | Top pick: 'Amul Taaza Homogenised Toned Milk (Tetra Pack) 1 pack (200 m' | score=0.627 | gap=0.133
+2026-06-09 21:13:07 | INFO     | agents.selector_agent | Confident pick (gap=0.133): 'Amul Taaza Homogenised Toned Milk (Tetra Pack) 1 pack (200 ml)'
+2026-06-09 21:13:07 | DEBUG    | agents.quantity_calculator | Unit mismatch: requested ml but product in ct for 'Amul Taaza Homogenised Toned Milk (Tetra Pack) 1 p'; defaulting to 1
+2026-06-09 21:13:07 | INFO     | automation.zepto_bot | Zepto: selected 'Amul Taaza Homogenised Toned Milk (Tetra Pack) 1 pack (200 ml)' @ Rs17 | requested 2.0 ltr -> adding 1 pack(s)
+2026-06-09 21:18:36 | INFO     | memory | Brand preferences DISABLED.
+2026-06-09 21:18:39 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 21:18:39 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-06-09 21:18:41 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 21:18:41 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-06-09 21:18:44 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 21:18:44 | INFO     | utils.playwright_manager | Starting browser | session=C:\Users\ganni\.shopping_agent\browser_session
+2026-06-09 21:18:44 | DEBUG    | asyncio | Using proactor: IocpProactor
+2026-06-09 21:18:46 | INFO     | utils.playwright_manager | Browser started.
+2026-06-09 21:18:52 | INFO     | automation.blinkit_bot | Blinkit: clearing cart from previous run
+2026-06-09 21:18:54 | INFO     | agents.selector_agent | Selecting product for 'milk' | 24 candidates | preferred='none'
+2026-06-09 21:18:54 | INFO     | agents.product_ranker | Ranking 10 products for query='milk'
+2026-06-09 21:18:54 | DEBUG    | agents.product_ranker | Blocked: 'Godrej Jersey Full Cream Milk 500 ml'
+2026-06-09 21:18:54 | DEBUG    | agents.product_ranker | Blocked: 'Arokya Full Cream Milk 500 ml'
+2026-06-09 21:18:54 | DEBUG    | agents.product_ranker | [0.638] Heritage Daily Health Toned Milk 500 ml            rel=0.55 val=0.97 brand=0.85
+2026-06-09 21:18:54 | DEBUG    | agents.product_ranker | [0.588] Heritage Special Long Life Milk (90 Days Shelf Lif rel=0.48 val=0.89 brand=0.85
+2026-06-09 21:18:54 | DEBUG    | agents.product_ranker | [0.606] Arokya Toned Milk 500 ml                           rel=0.63 val=1.00 brand=0.35
+2026-06-09 21:18:54 | DEBUG    | agents.product_ranker | [0.098] Sunfeast Baked Creations Rich Choco Chip Cookies 1 rel=0.00 val=0.00 brand=0.65
+2026-06-09 21:18:54 | DEBUG    | agents.product_ranker | [0.273] Sids Farm Buffalo A2 Milk 500 ml                   rel=0.55 val=0.00 brand=0.35
+2026-06-09 21:18:54 | DEBUG    | agents.product_ranker | [0.540] Sids Farm Toned Milk 500 ml                        rel=0.59 val=0.84 brand=0.35
+2026-06-09 21:18:54 | DEBUG    | agents.product_ranker | [0.465] Sids Farm Pure Cow Milk 500 ml                     rel=0.59 val=0.59 brand=0.35
+2026-06-09 21:18:54 | DEBUG    | agents.product_ranker | [0.591] Amul Taaza Homogenised Toned Milk 1 ltr            rel=0.59 val=0.77 brand=0.85
+2026-06-09 21:18:54 | INFO     | agents.product_ranker | Top pick: 'Heritage Daily Health Toned Milk 500 ml' | score=0.638 | gap=0.032
+2026-06-09 21:18:54 | INFO     | agents.selector_agent | Scores too close (gap=0.032); asking LLM to disambiguate
+2026-06-09 21:18:56 | WARNING  | llm_client | LLM request failed (attempt 1/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 21:18:56 | DEBUG    | llm_client | Retrying in 0.4s...
+2026-06-09 21:18:59 | WARNING  | llm_client | LLM request failed (attempt 2/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 21:18:59 | DEBUG    | llm_client | Retrying in 0.8s...
+2026-06-09 21:19:02 | WARNING  | llm_client | LLM request failed (attempt 3/3): 404 Client Error: Not Found for url: http://localhost:8080/
+2026-06-09 21:19:02 | WARNING  | agents.selector_agent | LLM returned empty response for 'milk'
+2026-06-09 21:19:02 | INFO     | agents.selector_agent | LLM fallback failed; using top-ranked: 'Heritage Daily Health Toned Milk 500 ml'
+2026-06-09 21:19:02 | INFO     | agents.quantity_calculator | Qty calc: 2000ml / 500ml per pack = 4 pack(s) of 'Heritage Daily Health Toned Milk 500 ml'
+2026-06-09 21:19:02 | INFO     | automation.blinkit_bot | Blinkit: selected 'Heritage Daily Health Toned Milk 500 ml' @ Rs32 | requested 2.0 ltr -> adding 4 pack(s)
+2026-06-09 21:19:09 | INFO     | automation.zepto_bot | Zepto: clearing cart from previous run
+2026-06-09 21:19:12 | INFO     | agents.selector_agent | Selecting product for 'milk' | 30 candidates | preferred='none'
+2026-06-09 21:19:12 | INFO     | agents.product_ranker | Ranking 10 products for query='milk'
+2026-06-09 21:19:12 | DEBUG    | agents.product_ranker | Blocked: 'Amul Gold Full Cream Fresh Milk | Pouch 1 pack (500 ml)'
+2026-06-09 21:19:12 | DEBUG    | agents.product_ranker | Blocked: 'Heritage Full Cream Fresh Milk | Pouch 1 pack (490 ml)'
+2026-06-09 21:19:12 | DEBUG    | agents.product_ranker | Blocked: 'Godrej Jersey Full Cream Fresh Milk | Pouch 1 pack (500 ml or 490 ml)'
+2026-06-09 21:19:12 | DEBUG    | agents.product_ranker | [0.399] Heritage Special Long Life Toned Milk (Pouch) 1 pa rel=0.48 val=0.26 brand=0.85
+2026-06-09 21:19:12 | DEBUG    | agents.product_ranker | [0.494] Amul Taaza Toned Fresh Milk | Pouch 1 pack (500 ml rel=0.52 val=0.53 brand=0.85
+2026-06-09 21:19:12 | DEBUG    | agents.product_ranker | [0.351] Arokya Toned Fresh Milk | Pouch 1 pack (500 ml)    rel=0.55 val=0.26 brand=0.35
+2026-06-09 21:19:12 | DEBUG    | agents.product_ranker | [0.409] Amul Moti Toned Milk | 90 Days Shelf life 1 pack ( rel=0.47 val=0.32 brand=0.85
+2026-06-09 21:19:12 | DEBUG    | agents.product_ranker | [0.395] Godrej Jersey Toned Fresh Milk | Pouch 1 pack (500 rel=0.50 val=0.47 brand=0.35
+2026-06-09 21:19:12 | DEBUG    | agents.product_ranker | [0.234] Sid's Farm Tested Toned Milk (No Antibiotics . No  rel=0.45 val=0.00 brand=0.35
+2026-06-09 21:19:12 | DEBUG    | agents.product_ranker | [0.627] Amul Taaza Homogenised Toned Milk (Tetra Pack) 1 p rel=0.50 val=1.00 brand=0.85
+2026-06-09 21:19:12 | INFO     | agents.product_ranker | Top pick: 'Amul Taaza Homogenised Toned Milk (Tetra Pack) 1 pack (200 m' | score=0.627 | gap=0.133
+2026-06-09 21:19:12 | INFO     | agents.selector_agent | Confident pick (gap=0.133): 'Amul Taaza Homogenised Toned Milk (Tetra Pack) 1 pack (200 ml)'
+2026-06-09 21:19:12 | INFO     | agents.quantity_calculator | Qty calc: 2000ml / 200ml per pack = 10 pack(s) of 'Amul Taaza Homogenised Toned Milk (Tetra Pack) 1 p'
+2026-06-09 21:19:12 | INFO     | automation.zepto_bot | Zepto: selected 'Amul Taaza Homogenised Toned Milk (Tetra Pack) 1 pack (200 ml)' @ Rs17 | requested 2.0 ltr -> adding 10 pack(s)

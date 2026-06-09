@@ -8,14 +8,27 @@ from utils.playwright_manager import get_browser
 
 logger = logging.getLogger(__name__)
 
-_CARD      = "a.B4vNQ"   # generated class — update here if Zepto redeploys
-_PLUS_BTN  = "button[aria-label='Increase quantity']"
-_MINUS_BTN = (
-    "button[aria-label='Decrease quantity'], "
-    "button[aria-label='Remove item'], "
-    "button[data-testid='decrement-btn']"
-)
+# Confirmed from live Zepto stepper HTML:
+#
+#   <button data-mode="edlp">                    <- outer wrapper
+#     <div class="ckLsUx">
+#       <button aria-label="Decrease quantity">  <- confirmed
+#       <span class="cZrvL8">1</span>
+#       <button aria-label="Increase quantity">  <- confirmed
+#     </div>
+#   </button>
+#
+# NOTE: nesting <button> inside <button> is invalid HTML. Chromium's parser
+# implicitly closes the outer button when it sees the inner button tag, so
+# the aria-label buttons may become siblings of the outer wrapper in the
+# rendered DOM — but they stay inside the <a.B4vNQ> product card.
+# We try card-relative first, then escalate through fallbacks.
+
+_CARD      = "a.B4vNQ"                              # update if Zepto redeploys
 _ADD_BTN   = "button:has-text('ADD')"
+_STEPPER   = "button[data-mode='edlp']"             # outer wrapper = item in cart
+_PLUS_BTN  = "button[aria-label='Increase quantity']"
+_MINUS_BTN = "button[aria-label='Decrease quantity']"
 
 
 class ZeptoBot:
@@ -57,7 +70,6 @@ class ZeptoBot:
                 continue
 
             units_to_add = calculate_units_needed(requested_amount, requested_unit, best["name"])
-
             logger.info(
                 "Zepto: selected '%s' @ Rs%s | requested %s %s -> adding %d pack(s)",
                 best["name"], best["price"], requested_amount, requested_unit, units_to_add,
@@ -130,9 +142,8 @@ class ZeptoBot:
                 if not price_match:
                     continue
 
-                # Zepto exposes the pack size in a dedicated slot (e.g. "500 ml",
-                # "1 kg"). Appending it to the name means the quantity calculator
-                # can correctly divide user-requested volume by pack size.
+                # Append the pack size (e.g. "500 ml") to the product name so
+                # calculate_units_needed can divide user's requested volume by pack size
                 pack_size = qty_el.first.inner_text().strip()
                 if pack_size and pack_size.lower() not in name.lower():
                     name = f"{name} {pack_size}"
@@ -147,30 +158,70 @@ class ZeptoBot:
 
         return products
 
+    def _find_plus_btn(self, card):
+        selectors = [
+            "button[aria-label='Increase quantity']",
+            "[aria-label='Increase quantity']",
+            "button:has(svg)",
+        ]
+
+        for sel in selectors:
+            try:
+                btn = card.locator(sel)
+                if btn.count() > 0:
+                    return btn.last
+            except Exception:
+                pass
+
+        return None
+
     def add_to_cart(self, product, units=1):
         try:
-            card    = product["card"]
+            card = product["card"]
             card.scroll_into_view_if_needed()
+            self.page.wait_for_timeout(500)
+
             add_btn = card.locator(_ADD_BTN)
 
             if add_btn.count() > 0:
-                add_btn.first.click()
-                try:
-                    card.locator(_PLUS_BTN).first.wait_for(state="visible", timeout=3000)
-                except Exception:
-                    self.page.wait_for_timeout(1000)
-            else:
-                if card.locator(_PLUS_BTN).count() == 0:
-                    logger.warning("Zepto: neither ADD nor stepper for '%s'", product["name"])
-                    return
+                add_btn.first.click(force=True)
 
-            for i in range(units - 1):
-                plus_btn = card.locator(_PLUS_BTN)
+                for _ in range(20):
+                    plus_btn = card.locator(
+                        "button[aria-label='Increase quantity']"
+                    )
+                    if plus_btn.count() > 0:
+                        break
+                    self.page.wait_for_timeout(250)
+
+            if units <= 1:
+                return
+
+            for step in range(units - 1):
+
+                plus_btn = card.locator(
+                    "button[aria-label='Increase quantity']"
+                )
+
                 if plus_btn.count() == 0:
-                    logger.warning("Zepto: plus gone at step %d/%d for '%s'", i + 1, units - 1, product["name"])
+                    plus_btn = self._find_plus_btn(card)
+
+                if plus_btn is None or plus_btn.count() == 0:
+                    logger.warning(
+                        "Zepto: plus button missing at step %d/%d for '%s'",
+                        step + 1,
+                        units - 1,
+                        product["name"],
+                    )
                     break
-                plus_btn.first.click()
-                self.page.wait_for_timeout(350)
+
+                plus_btn.first.click(force=True)
+                self.page.wait_for_timeout(700)
 
         except Exception as exc:
-            logger.warning("Zepto: failed to add '%s': %s", product["name"], exc)
+            logger.warning(
+                "Zepto: failed to add '%s': %s",
+                product["name"],
+                exc,
+            )
+
