@@ -6,9 +6,6 @@ logger = logging.getLogger(__name__)
 
 MAX_UNITS = 10
 
-# Matches a size+unit anywhere in a product name string.
-# Includes both "litre/litres" (British) and "liter/liters" (American)
-# because different scrapers/platforms use different spellings.
 _SIZE_RE = re.compile(
     r"(\d+(?:\.\d+)?)\s*"
     r"(ml|l\b|ltr|litres?|liters?|g\b|gm|gms?|gram|grams?|kg|kgs?"
@@ -22,8 +19,8 @@ _UNIT_MAP = {
     "ltr":     ("ml",   1000.0),
     "litre":   ("ml",   1000.0),
     "litres":  ("ml",   1000.0),
-    "liter":   ("ml",   1000.0),   # American spelling — was missing
-    "liters":  ("ml",   1000.0),   # American spelling — was missing
+    "liter":   ("ml",   1000.0),
+    "liters":  ("ml",   1000.0),
     "g":       ("g",    1.0),
     "gm":      ("g",    1.0),
     "gms":     ("g",    1.0),
@@ -50,50 +47,48 @@ _COUNT_UNITS = {
 }
 
 
-def _parse_size(product_name: str):
-    matches = list(_SIZE_RE.finditer(product_name))
+def _parse_size(product_name: str, preferred_base_unit: str = None):
+    """
+    Find size measurements in a product name and return the most relevant one.
 
-    if not matches:
+    Collects ALL regex matches first, then selects:
+      1. The first match whose base unit equals preferred_base_unit (if given)
+      2. Otherwise the first match overall
+
+    This fixes the "1 pack (450 ml)" problem — the old code used re.search()
+    which returned "1 pack" (count unit) before ever reaching "450 ml" (volume).
+    When the user requested litres, preferred_base_unit="ml" so we now skip
+    "1 pack" and correctly pick "450 ml".
+    """
+    all_matches = []
+    for m in _SIZE_RE.finditer(product_name):
+        value   = float(m.group(1))
+        key     = m.group(2).lower()
+        mapping = _UNIT_MAP.get(key)
+        if mapping:
+            base_unit, multiplier = mapping
+            all_matches.append((value * multiplier, base_unit))
+
+    if not all_matches:
         return None, None
 
-    volume_matches = []
-    count_matches = []
+    if preferred_base_unit:
+        for size_base, size_unit in all_matches:
+            if size_unit == preferred_base_unit:
+                return size_base, size_unit
 
-    for m in matches:
-        unit_key = m.group(2).lower()
-
-        if unit_key in {
-            "ml", "l", "ltr", "litre", "litres",
-            "liter", "liters",
-            "g", "gm", "gms", "gram", "grams",
-            "kg", "kgs"
-        }:
-            volume_matches.append(m)
-        else:
-            count_matches.append(m)
-
-    chosen = volume_matches[-1] if volume_matches else matches[-1]
-
-    value = float(chosen.group(1))
-    unit_key = chosen.group(2).lower()
-
-    base_unit, multiplier = _UNIT_MAP[unit_key]
-
-    return value * multiplier, base_unit
+    return all_matches[0]
 
 
 def calculate_units_needed(requested_amount, requested_unit: str, product_name: str) -> int:
     """
-    How many packs of this product are needed to fulfil the user's request?
+    How many packs to add to reach the user's requested quantity.
 
-    Examples:
-      2 litre  + 500ml pack  -> ceil(2000/500) = 4
-      2 litre  + 1L pack     -> ceil(2000/1000) = 2
-      2 liter  + 500ml pack  -> same (American spelling now handled)
-      1 kg     + 500g pack   -> ceil(1000/500) = 2
-      6 pcs    + 6-pack      -> ceil(6/6) = 1
-      3 unit   + no size     -> 3  (count unit, direct)
-      2 litre  + no size     -> 1  (can't divide, safe default)
+    Examples after fix:
+      2 litre + "1 pack (450 ml)"  -> prefers 450ml -> ceil(2000/450) = 5
+      2 litre + "500 ml pack"      -> 500ml          -> ceil(2000/500) = 4
+      1 kg    + "500g pack"        -> 500g           -> ceil(1000/500) = 2
+      6 pcs   + "6-pack"           -> 6ct            -> ceil(6/6)      = 1
     """
     try:
         amount = float(requested_amount) if requested_amount else 1.0
@@ -103,14 +98,11 @@ def calculate_units_needed(requested_amount, requested_unit: str, product_name: 
     unit_lower = (requested_unit or "unit").lower().strip()
 
     if unit_lower in _COUNT_UNITS:
-        # User wants N individual items — divide by pack size if it's a multipack
-        size_base, size_unit = _parse_size(product_name)
+        size_base, size_unit = _parse_size(product_name, preferred_base_unit="ct")
         if size_base and size_base > 1 and size_unit == "ct":
             result = max(1, min(math.ceil(amount / size_base), MAX_UNITS))
-            logger.info(
-                "Qty calc: %d items / %d per pack = %d pack(s) of '%s'",
-                int(amount), int(size_base), result, product_name[:50],
-            )
+            logger.info("Qty: %d items / %d per pack = %d x '%s'",
+                        int(amount), int(size_base), result, product_name[:50])
             return result
         return max(1, min(int(amount), MAX_UNITS))
 
@@ -122,25 +114,21 @@ def calculate_units_needed(requested_amount, requested_unit: str, product_name: 
     req_base_unit, req_multiplier = req_mapping
     requested_in_base = amount * req_multiplier
 
-    size_base, size_unit = _parse_size(product_name)
+    # Pass preferred unit so parser skips count-based matches (e.g. "1 pack")
+    # and finds the volume/weight match (e.g. "450 ml") instead
+    size_base, size_unit = _parse_size(product_name, preferred_base_unit=req_base_unit)
 
     if size_base is None:
-        logger.debug("No size found in '%s'; defaulting to 1 pack", product_name[:50])
+        logger.debug("No size in '%s'; defaulting to 1", product_name[:50])
         return 1
 
     if size_base > 0 and size_unit == req_base_unit:
         result = max(1, min(math.ceil(requested_in_base / size_base), MAX_UNITS))
-        logger.info(
-            "Qty calc: %.0f%s / %.0f%s per pack = %d pack(s) of '%s'",
-            requested_in_base, req_base_unit,
-            size_base, size_unit,
-            result, product_name[:50],
-        )
+        logger.info("Qty: %.0f%s / %.0f%s per pack = %d x '%s'",
+                    requested_in_base, req_base_unit,
+                    size_base, size_unit, result, product_name[:50])
         return result
 
-    # Units don't match (e.g. user requested ml, product measured in g)
-    logger.debug(
-        "Unit mismatch: requested %s but product in %s for '%s'; defaulting to 1",
-        req_base_unit, size_unit, product_name[:50],
-    )
+    logger.debug("Unit mismatch: want %s, product has %s for '%s'; defaulting to 1",
+                 req_base_unit, size_unit, product_name[:50])
     return 1
